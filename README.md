@@ -10,6 +10,7 @@
 | `ReactBasics` | ラーニングジャーニー 2 本目「React 最小限入門」 | 約 2 分 3 秒 |
 | `Animate` | ラーニングジャーニー 4 本目「フレームで動きをつける」 | 約 1 分 58 秒 |
 | `Compose` | ラーニングジャーニー 5 本目「シーンの並べ方とタイミング」 | 約 1 分 52 秒 |
+| `Narration` | ラーニングジャーニー 6 本目「ナレーションの仕組み」 | 約 1 分 56 秒 |
 
 ## 使い方
 
@@ -27,6 +28,7 @@ npx remotion render Overview out/01-overview.mp4
 npx remotion render ReactBasics out/02-react-basics.mp4
 npx remotion render Animate out/04-animate.mp4
 npx remotion render Compose out/05-compose.mp4
+npx remotion render Narration out/06-narration.mp4
 ```
 
 ## ナレーション (ローカル TTS)
