@@ -278,7 +278,7 @@ const Hooks: React.FC = () => {
 	const bar = useFadeIn(270);
 	const ng = usePop(380);
 	return (
-		<Scene title="フック: use で始まる関数" caption="useCurrentFrame() の使い方は 4 本目「時間で動かす」で詳しく。">
+		<Scene title="フック: use で始まる関数" caption="useCurrentFrame() の使い方は 4 本目「フレームで動きをつける」で詳しく。">
 			<div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 44, marginTop: 30}}>
 				<div style={{display: 'flex', alignItems: 'center', gap: 50}}>
 					<Code lines={['const frame = useCurrentFrame();']} fontSize={40} />

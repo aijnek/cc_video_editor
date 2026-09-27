@@ -98,6 +98,18 @@ export const Thumb: React.FC<{frame: number; width: number}> = ({frame, width}) 
 	/>
 );
 
+// 1920x1080 のシーンを縮小して表示する (実物のコンポーネントをそのまま描画するため)
+export const Screen: React.FC<{width: number; children: React.ReactNode}> = ({width, children}) => {
+	const scale = width / 1920;
+	return (
+		<div style={{width, height: 1080 * scale, position: 'relative', overflow: 'hidden', borderRadius: 12, flexShrink: 0}}>
+			<div style={{width: 1920, height: 1080, position: 'relative', transform: `scale(${scale})`, transformOrigin: 'top left'}}>
+				{children}
+			</div>
+		</div>
+	);
+};
+
 export const Box: React.FC<{
 	children: React.ReactNode;
 	color?: string;
@@ -167,7 +179,8 @@ export const JourneyMap: React.FC<{current: SeriesId; delay?: number}> = ({curre
 							gap: 22,
 							padding: '12px 26px',
 							borderRadius: 14,
-							fontSize: 36,
+							fontSize: 34,
+							whiteSpace: 'nowrap',
 							background: on ? 'rgba(251,191,36,0.14)' : 'transparent',
 							border: `3px solid ${on ? ACCENT : 'transparent'}`,
 							color: on ? '#fff' : i < index ? '#64748b' : '#94a3b8',
@@ -206,7 +219,16 @@ export const SeriesTitle: React.FC<{current: SeriesId; subtitle: string}> = ({cu
 				<div style={{fontFamily: MONO, fontSize: 40, color: ACCENT}}>
 					{index + 1} / {SERIES.length}
 				</div>
-				<div style={{fontSize: 110, fontWeight: 800, margin: '10px 0 24px'}}>{SERIES[index].title}</div>
+				<div
+					style={{
+						fontSize: SERIES[index].title.length > 9 ? 84 : 110,
+						fontWeight: 800,
+						margin: '10px 0 24px',
+						whiteSpace: 'nowrap',
+					}}
+				>
+					{SERIES[index].title}
+				</div>
 				<div style={{fontSize: 44, color: '#cbd5e1', opacity: sub}}>{subtitle}</div>
 			</div>
 			<JourneyMap current={current} delay={15} />

@@ -42,7 +42,7 @@ export const ApiLabel: React.FC<{text: string}> = ({text}) => {
 };
 
 // 1. タイトル: spring で弾むように登場、interpolate でフェード
-const Intro: React.FC = () => {
+export const Intro: React.FC = () => {
 	const frame = useCurrentFrame();
 	const {fps} = useVideoConfig();
 	const scale = spring({fps, frame, config: {damping: 12}});
@@ -136,7 +136,7 @@ const DATA = [
 	{label: '6月', value: 100},
 ];
 
-const BarChart: React.FC = () => {
+export const BarChart: React.FC = () => {
 	const frame = useCurrentFrame();
 	const {fps} = useVideoConfig();
 	return (
@@ -225,7 +225,7 @@ const Particles: React.FC = () => {
 };
 
 // 5. 図形アニメーション: 円を描き、回転させ、進捗をパーセント表示
-const Progress: React.FC = () => {
+export const Progress: React.FC = () => {
 	const frame = useCurrentFrame();
 	const {durationInFrames} = useVideoConfig();
 	const radius = 250;
