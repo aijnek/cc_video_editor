@@ -270,7 +270,18 @@ export const NextUp: React.FC<{
 						</div>
 						<div style={{fontSize: 50, fontWeight: 800, marginTop: 8, whiteSpace: 'nowrap'}}>{next.title}</div>
 					</Box>
-				) : null}
+				) : (
+					<Box
+						color={ACCENT}
+						style={{width: 720, opacity: card, transform: `translateY(${(1 - card) * 40}px)`}}
+					>
+						<div style={{fontFamily: MONO, fontSize: 40, color: ACCENT}}>
+							{SERIES.length} / {SERIES.length}
+						</div>
+						<div style={{fontSize: 56, fontWeight: 800, marginTop: 8}}>シリーズ完了</div>
+						<div style={{fontSize: 34, color: '#cbd5e1', marginTop: 12}}>おつかれさまでした</div>
+					</Box>
+				)}
 			</div>
 		</Scene>
 	);

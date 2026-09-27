@@ -6,11 +6,12 @@
 |---|---|---|
 | `MyComp` | Remotion でできること (spring / Sequence / TransitionSeries など) のショーケース | 30 秒 |
 | `HowItWorks` | レンダリングの仕組み (バンドル → Chrome で撮影 → FFmpeg で動画化) の解説。ラーニングジャーニー 3 本目も兼ねる | 約 2 分 36 秒 |
-| `Overview` | ラーニングジャーニー (このリポジトリを理解するための動画シリーズ、全 7 本予定) の 1 本目「全体像」 | 約 2 分 7 秒 |
+| `Overview` | ラーニングジャーニー (このリポジトリを理解するための動画シリーズ、全 7 本) の 1 本目「全体像」 | 約 2 分 7 秒 |
 | `ReactBasics` | ラーニングジャーニー 2 本目「React 最小限入門」 | 約 2 分 3 秒 |
 | `Animate` | ラーニングジャーニー 4 本目「フレームで動きをつける」 | 約 1 分 58 秒 |
 | `Compose` | ラーニングジャーニー 5 本目「シーンの並べ方とタイミング」 | 約 1 分 52 秒 |
 | `Narration` | ラーニングジャーニー 6 本目「ナレーションの仕組み」 | 約 1 分 56 秒 |
+| `Practice` | ラーニングジャーニー 7 本目「実践：新しいシーンを追加」 | 約 1 分 56 秒 |
 
 ## 使い方
 
@@ -29,6 +30,7 @@ npx remotion render ReactBasics out/02-react-basics.mp4
 npx remotion render Animate out/04-animate.mp4
 npx remotion render Compose out/05-compose.mp4
 npx remotion render Narration out/06-narration.mp4
+npx remotion render Practice out/07-practice.mp4
 ```
 
 ## ナレーション (ローカル TTS)

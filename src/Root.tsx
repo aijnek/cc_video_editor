@@ -6,6 +6,7 @@ import {REACT_BASICS_DURATION, ReactBasics} from './journey/ReactBasics';
 import {Animate, ANIMATE_DURATION} from './journey/Animate';
 import {Compose, COMPOSE_DURATION} from './journey/Compose';
 import {Narration, NARRATION_DURATION} from './journey/Narration';
+import {Practice, PRACTICE_DURATION} from './journey/Practice';
 
 export const Root: React.FC = () => {
 	return (
@@ -68,6 +69,15 @@ export const Root: React.FC = () => {
 				id="Narration"
 				component={Narration}
 				durationInFrames={NARRATION_DURATION}
+				width={1920}
+				height={1080}
+				fps={30}
+				defaultProps={{}}
+			/>
+			<Composition
+				id="Practice"
+				component={Practice}
+				durationInFrames={PRACTICE_DURATION}
 				width={1920}
 				height={1080}
 				fps={30}
