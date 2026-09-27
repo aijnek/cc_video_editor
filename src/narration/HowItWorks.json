@@ -1,7 +1,7 @@
 [
 	{
 		"file": "narration/HowItWorks/00.wav",
-		"frames": 327
+		"frames": 296
 	},
 	{
 		"file": "narration/HowItWorks/01.wav",
@@ -34,5 +34,9 @@
 	{
 		"file": "narration/HowItWorks/08.wav",
 		"frames": 452
+	},
+	{
+		"file": "narration/HowItWorks/09.wav",
+		"frames": 387
 	}
 ]

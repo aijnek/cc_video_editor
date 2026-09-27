@@ -1,37 +1,30 @@
-import {AbsoluteFill, interpolate, random, spring, useCurrentFrame, useVideoConfig} from 'remotion';
-import {clamp, FONT} from './MyComp';
-import {ACCENT, Arrow, BG, Box, MONO, narratedVideo, Scene, Thumb, useFadeIn, usePop} from './journey/ui';
+import {interpolate, random, spring, useCurrentFrame, useVideoConfig} from 'remotion';
+import {clamp} from './MyComp';
+import {
+	ACCENT,
+	Arrow,
+	BG,
+	Box,
+	MONO,
+	narratedVideo,
+	NextUp,
+	Scene,
+	SeriesTitle,
+	Thumb,
+	useFadeIn,
+	usePop,
+} from './journey/ui';
 import narration from './narration/HowItWorks.json';
 
-// 前回つくったサンプル動画 (MyComp) を解説対象にする。
+// ラーニングジャーニー 3/7: Remotion の裏側。サンプル動画 (MyComp) を解説対象にする。
 // 数値は `npx remotion render --log=verbose` の実ログ (v4.0.529 / この Mac) に基づく。
 
 const TAB_COLORS = ['#60a5fa', '#f472b6', '#34d399', '#fbbf24', '#a78bfa', '#fb923c'];
 
 // 0. タイトル
-const Title: React.FC = () => {
-	const p = usePop(0);
-	const sub = useFadeIn(25);
-	return (
-		<AbsoluteFill
-			style={{
-				background: 'linear-gradient(135deg, #0b1020, #1e3a8a)',
-				justifyContent: 'center',
-				alignItems: 'center',
-				color: '#fff',
-				fontFamily: FONT,
-				gap: 30,
-			}}
-		>
-			<div style={{fontSize: 120, fontWeight: 800, transform: `scale(${0.8 + p * 0.2})`, opacity: p}}>
-				Remotion の裏側
-			</div>
-			<div style={{fontSize: 56, opacity: sub, color: '#cbd5e1'}}>
-				React のコードが MP4 になるまで
-			</div>
-		</AbsoluteFill>
-	);
-};
+const Title: React.FC = () => (
+	<SeriesTitle current="HowItWorks" subtitle="React のコードが MP4 になるまで" />
+);
 
 // 1. 基本の考え方: frame 番号 → 1枚の絵
 const FrameIdea: React.FC = () => {
@@ -564,6 +557,17 @@ const Summary: React.FC = () => {
 	);
 };
 
+// 9. 次のステップ
+const Next: React.FC = () => (
+	<NextUp
+		current="HowItWorks"
+		files={[
+			{path: 'src/MyComp.tsx の Intro', note: 'spring() と interpolate() を探す'},
+			{path: 'src/MyComp.tsx の Progress', note: 'useVideoConfig() で長さを取得'},
+		]}
+	/>
+);
+
 // 全体構成
 export const {Video: HowItWorks, durationInFrames: HOW_IT_WORKS_DURATION} = narratedVideo(
 	[
@@ -576,6 +580,7 @@ export const {Video: HowItWorks, durationInFrames: HOW_IT_WORKS_DURATION} = narr
 		[Encode, 270],
 		[Deterministic, 300],
 		[Summary, 300],
+		[Next, 240],
 	],
 	narration,
 );

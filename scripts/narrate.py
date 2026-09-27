@@ -31,6 +31,7 @@ targets = [int(a) for a in sys.argv[2:]] or list(range(len(NARRATION)))
 if targets != list(range(len(NARRATION))):
     with open(out_json) as f:
         result = json.load(f)
+    result += [None] * (len(NARRATION) - len(result))  # 原稿の末尾にシーンを足した場合
 else:
     result = [None] * len(NARRATION)
 

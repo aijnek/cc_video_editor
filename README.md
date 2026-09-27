@@ -5,7 +5,7 @@
 | Composition | 内容 | 長さ |
 |---|---|---|
 | `MyComp` | Remotion でできること (spring / Sequence / TransitionSeries など) のショーケース | 30 秒 |
-| `HowItWorks` | レンダリングの仕組み (バンドル → Chrome で撮影 → FFmpeg で動画化) の解説。ナレーション付き | 約 2 分 24 秒 |
+| `HowItWorks` | レンダリングの仕組み (バンドル → Chrome で撮影 → FFmpeg で動画化) の解説。ラーニングジャーニー 3 本目も兼ねる | 約 2 分 36 秒 |
 | `Overview` | ラーニングジャーニー (このリポジトリを理解するための動画シリーズ、全 7 本予定) の 1 本目「全体像」 | 約 2 分 7 秒 |
 | `ReactBasics` | ラーニングジャーニー 2 本目「React 最小限入門」 | 約 2 分 3 秒 |
 
