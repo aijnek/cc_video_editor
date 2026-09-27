@@ -18,7 +18,7 @@ export const FONT = '"Hiragino Sans", "Noto Sans JP", sans-serif';
 export const clamp = {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'} as const;
 
 // 各シーンの左下に「このシーンで使っている機能」を表示するラベル
-const ApiLabel: React.FC<{text: string}> = ({text}) => {
+export const ApiLabel: React.FC<{text: string}> = ({text}) => {
 	const frame = useCurrentFrame();
 	const opacity = interpolate(frame, [10, 25], [0, 1], clamp);
 	return (
@@ -76,7 +76,7 @@ const Intro: React.FC = () => {
 };
 
 // 2. キネティックタイポグラフィ: 単語ごとに Sequence で登場タイミングをずらす
-const Word: React.FC<{text: string; color: string}> = ({text, color}) => {
+export const Word: React.FC<{text: string; color: string}> = ({text, color}) => {
 	const frame = useCurrentFrame(); // Sequence 内なので 0 から数え直される
 	const {fps} = useVideoConfig();
 	const progress = spring({fps, frame, config: {damping: 200}});
@@ -95,7 +95,7 @@ const Word: React.FC<{text: string; color: string}> = ({text, color}) => {
 	);
 };
 
-const WORDS = [
+export const WORDS = [
 	{text: '文字を', color: '#fde68a'},
 	{text: '1語ずつ', color: '#fca5a5'},
 	{text: '動かす', color: '#93c5fd'},

@@ -116,6 +116,36 @@ export const Box: React.FC<{
 	</div>
 );
 
+// コード表示。highlight に入れた行を強調する
+export const Code: React.FC<{
+	lines: string[];
+	label?: string;
+	highlight?: number[];
+	fontSize?: number;
+	style?: React.CSSProperties;
+}> = ({lines, label, highlight = [], fontSize = 34, style}) => (
+	<Box color="#475569" style={{fontFamily: MONO, fontSize, lineHeight: 1.55, padding: '20px 26px', ...style}}>
+		{label ? <div style={{color: '#64748b', fontSize: fontSize * 0.75, marginBottom: 8}}>{label}</div> : null}
+		{lines.map((l, i) => {
+			const on = highlight.includes(i);
+			return (
+				<div
+					key={i}
+					style={{
+						whiteSpace: 'pre',
+						color: on ? ACCENT : '#e2e8f0',
+						background: on ? 'rgba(251,191,36,0.12)' : 'transparent',
+						padding: '0 8px',
+						borderRadius: 6,
+					}}
+				>
+					{l || ' '}
+				</div>
+			);
+		})}
+	</Box>
+);
+
 export const Arrow: React.FC<{opacity?: number}> = ({opacity = 1}) => (
 	<div style={{fontSize: 70, color: '#64748b', opacity}}>→</div>
 );
@@ -195,7 +225,7 @@ export const NextUp: React.FC<{
 	return (
 		<Scene title="次のステップ">
 			<div style={{display: 'flex', justifyContent: 'center', alignItems: 'flex-start', gap: 80, marginTop: 30}}>
-				<div style={{width: 760}}>
+				<div style={{width: 700}}>
 					<div style={{fontSize: 36, color: '#94a3b8', marginBottom: 20}}>次に読むコード</div>
 					{files.map((f, i) => {
 						const o = useFadeIn(40 + i * 20);
@@ -210,13 +240,13 @@ export const NextUp: React.FC<{
 				{next ? (
 					<Box
 						color={ACCENT}
-						style={{width: 600, opacity: card, transform: `translateY(${(1 - card) * 40}px)`}}
+						style={{width: 720, opacity: card, transform: `translateY(${(1 - card) * 40}px)`}}
 					>
 						<div style={{fontSize: 34, color: '#94a3b8'}}>次の動画</div>
 						<div style={{fontFamily: MONO, fontSize: 40, color: ACCENT, marginTop: 16}}>
 							{index + 2} / {SERIES.length}
 						</div>
-						<div style={{fontSize: 60, fontWeight: 800, marginTop: 8}}>{next.title}</div>
+						<div style={{fontSize: 50, fontWeight: 800, marginTop: 8, whiteSpace: 'nowrap'}}>{next.title}</div>
 					</Box>
 				) : null}
 			</div>
