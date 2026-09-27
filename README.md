@@ -9,6 +9,7 @@
 | `Overview` | ラーニングジャーニー (このリポジトリを理解するための動画シリーズ、全 7 本予定) の 1 本目「全体像」 | 約 2 分 7 秒 |
 | `ReactBasics` | ラーニングジャーニー 2 本目「React 最小限入門」 | 約 2 分 3 秒 |
 | `Animate` | ラーニングジャーニー 4 本目「フレームで動きをつける」 | 約 1 分 58 秒 |
+| `Compose` | ラーニングジャーニー 5 本目「シーンの並べ方とタイミング」 | 約 1 分 52 秒 |
 
 ## 使い方
 
@@ -25,6 +26,7 @@ npx remotion render HowItWorks out/how-it-works.mp4
 npx remotion render Overview out/01-overview.mp4
 npx remotion render ReactBasics out/02-react-basics.mp4
 npx remotion render Animate out/04-animate.mp4
+npx remotion render Compose out/05-compose.mp4
 ```
 
 ## ナレーション (ローカル TTS)

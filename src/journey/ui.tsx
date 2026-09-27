@@ -279,8 +279,8 @@ export const NextUp: React.FC<{
 // ナレーション付き動画の組み立て。
 // 各シーンの長さ = max(基本の長さ, ナレーションが収まる長さ)。
 // ナレーションは scripts/narrate.py で生成 (public/narration/<動画>/, src/narration/<動画>.json)
-const NARRATION_START = 10;
-const NARRATION_TAIL = 30;
+export const NARRATION_START = 10;
+export const NARRATION_TAIL = 30;
 const TRANSITION = 15;
 
 export const narratedVideo = (

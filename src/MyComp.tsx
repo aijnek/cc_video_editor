@@ -103,7 +103,7 @@ export const WORDS = [
 	{text: '簡単', color: '#f0abfc'},
 ];
 
-const Kinetic: React.FC = () => {
+export const Kinetic: React.FC = () => {
 	return (
 		<AbsoluteFill style={{background: '#0f172a', fontFamily: FONT}}>
 			<AbsoluteFill
