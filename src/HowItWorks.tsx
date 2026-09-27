@@ -1,128 +1,12 @@
-import {
-	AbsoluteFill,
-	Audio,
-	Img,
-	interpolate,
-	random,
-	Sequence,
-	spring,
-	staticFile,
-	useCurrentFrame,
-	useVideoConfig,
-} from 'remotion';
-import {linearTiming, TransitionSeries} from '@remotion/transitions';
-import {fade} from '@remotion/transitions/fade';
+import {AbsoluteFill, interpolate, random, spring, useCurrentFrame, useVideoConfig} from 'remotion';
 import {clamp, FONT} from './MyComp';
-import narration from './narration.json';
+import {ACCENT, Arrow, BG, Box, MONO, narratedVideo, Scene, Thumb, useFadeIn, usePop} from './journey/ui';
+import narration from './narration/HowItWorks.json';
 
 // 前回つくったサンプル動画 (MyComp) を解説対象にする。
 // 数値は `npx remotion render --log=verbose` の実ログ (v4.0.529 / この Mac) に基づく。
 
-const MONO = 'Menlo, monospace';
-const BG = '#0b1020';
-const ACCENT = '#fbbf24';
 const TAB_COLORS = ['#60a5fa', '#f472b6', '#34d399', '#fbbf24', '#a78bfa', '#fb923c'];
-
-const useFadeIn = (start: number, length = 15) =>
-	interpolate(useCurrentFrame(), [start, start + length], [0, 1], clamp);
-
-const usePop = (delay: number) => {
-	const frame = useCurrentFrame();
-	const {fps} = useVideoConfig();
-	return spring({fps, frame: frame - delay, config: {damping: 200}});
-};
-
-// 共通レイアウト: 上に見出し、下に説明文
-const Scene: React.FC<{
-	step?: string;
-	title: string;
-	caption?: string;
-	children?: React.ReactNode;
-}> = ({step, title, caption, children}) => {
-	const titleIn = usePop(0);
-	const captionIn = useFadeIn(25);
-	return (
-		<AbsoluteFill style={{background: BG, color: '#fff', fontFamily: FONT}}>
-			<div
-				style={{
-					position: 'absolute',
-					top: 60,
-					left: 90,
-					display: 'flex',
-					alignItems: 'center',
-					gap: 28,
-					opacity: titleIn,
-					transform: `translateX(${(1 - titleIn) * -60}px)`,
-				}}
-			>
-				{step ? (
-					<div
-						style={{
-							background: ACCENT,
-							color: BG,
-							fontWeight: 800,
-							fontSize: 36,
-							padding: '8px 22px',
-							borderRadius: 999,
-						}}
-					>
-						{step}
-					</div>
-				) : null}
-				<div style={{fontSize: 60, fontWeight: 800}}>{title}</div>
-			</div>
-			<AbsoluteFill style={{top: 190, bottom: 170, height: 'auto'}}>{children}</AbsoluteFill>
-			{caption ? (
-				<div
-					style={{
-						position: 'absolute',
-						left: 90,
-						right: 90,
-						bottom: 60,
-						fontSize: 40,
-						lineHeight: 1.5,
-						color: '#cbd5e1',
-						opacity: captionIn,
-					}}
-				>
-					{caption}
-				</div>
-			) : null}
-		</AbsoluteFill>
-	);
-};
-
-// MyComp の静止画 (public/mycomp/NNN.jpeg, 30フレームごと) を表示する。
-// <Freeze><MyComp/></Freeze> で直接埋め込むと、親シーンの長さで MyComp 内の Sequence が
-// 打ち切られ後半が描画されないため、事前に書き出した画像を使う。
-const Thumb: React.FC<{frame: number; width: number}> = ({frame, width}) => (
-	<Img
-		src={staticFile(`mycomp/${String(frame).padStart(3, '0')}.jpeg`)}
-		style={{width, height: (width * 9) / 16, borderRadius: 10, display: 'block', flexShrink: 0}}
-	/>
-);
-
-const Box: React.FC<{
-	children: React.ReactNode;
-	color?: string;
-	style?: React.CSSProperties;
-}> = ({children, color = '#334155', style}) => (
-	<div
-		style={{
-			border: `4px solid ${color}`,
-			borderRadius: 20,
-			padding: '24px 32px',
-			background: 'rgba(255,255,255,0.04)',
-			...style,
-		}}
-	>
-		{children}
-	</div>
-);
-
-const Arrow: React.FC<{opacity?: number}> = ({opacity = 1}) => (
-	<div style={{fontSize: 70, color: '#64748b', opacity}}>→</div>
-);
 
 // 0. タイトル
 const Title: React.FC = () => {
@@ -680,13 +564,8 @@ const Summary: React.FC = () => {
 	);
 };
 
-// 全体構成: 各シーンの長さ = max(基本の長さ, ナレーションが収まる長さ)
-// ナレーション音声と長さは scripts/narrate.mjs で生成 (public/narration/, src/narration.json)
-const NARRATION_START = 10;
-const NARRATION_TAIL = 30;
-const TRANSITION = 15;
-
-const SCENES = (
+// 全体構成
+export const {Video: HowItWorks, durationInFrames: HOW_IT_WORKS_DURATION} = narratedVideo(
 	[
 		[Title, 150],
 		[FrameIdea, 300],
@@ -697,36 +576,6 @@ const SCENES = (
 		[Encode, 270],
 		[Deterministic, 300],
 		[Summary, 300],
-	] as const
-).map(([Comp, base], i) => ({
-	Comp,
-	audio: narration[i].file,
-	duration: Math.max(base, NARRATION_START + narration[i].frames + NARRATION_TAIL),
-}));
-
-export const HOW_IT_WORKS_DURATION =
-	SCENES.reduce((sum, s) => sum + s.duration, 0) - (SCENES.length - 1) * TRANSITION;
-
-export const HowItWorks: React.FC = () => {
-	return (
-		<TransitionSeries>
-			{SCENES.flatMap(({Comp, audio, duration}, i) => [
-				...(i > 0
-					? [
-							<TransitionSeries.Transition
-								key={`t${i}`}
-								timing={linearTiming({durationInFrames: TRANSITION})}
-								presentation={fade()}
-							/>,
-						]
-					: []),
-				<TransitionSeries.Sequence key={`s${i}`} durationInFrames={duration}>
-					<Comp />
-					<Sequence from={NARRATION_START}>
-						<Audio src={staticFile(audio)} />
-					</Sequence>
-				</TransitionSeries.Sequence>,
-			])}
-		</TransitionSeries>
-	);
-};
+	],
+	narration,
+);

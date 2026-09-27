@@ -1,0 +1,273 @@
+// ラーニングジャーニーの動画で共通に使う見た目の部品と、ナレーション付き動画の組み立て
+import {
+	AbsoluteFill,
+	Audio,
+	Img,
+	interpolate,
+	Sequence,
+	spring,
+	staticFile,
+	useCurrentFrame,
+	useVideoConfig,
+} from 'remotion';
+import {linearTiming, TransitionSeries} from '@remotion/transitions';
+import {fade} from '@remotion/transitions/fade';
+import {clamp, FONT} from '../MyComp';
+import {SERIES, SeriesId} from './series';
+
+export const MONO = 'Menlo, monospace';
+export const BG = '#0b1020';
+export const ACCENT = '#fbbf24';
+
+export const useFadeIn = (start: number, length = 15) =>
+	interpolate(useCurrentFrame(), [start, start + length], [0, 1], clamp);
+
+export const usePop = (delay: number) => {
+	const frame = useCurrentFrame();
+	const {fps} = useVideoConfig();
+	return spring({fps, frame: frame - delay, config: {damping: 200}});
+};
+
+// 共通レイアウト: 上に見出し、下に説明文
+export const Scene: React.FC<{
+	step?: string;
+	title: string;
+	caption?: string;
+	children?: React.ReactNode;
+}> = ({step, title, caption, children}) => {
+	const titleIn = usePop(0);
+	const captionIn = useFadeIn(25);
+	return (
+		<AbsoluteFill style={{background: BG, color: '#fff', fontFamily: FONT}}>
+			<div
+				style={{
+					position: 'absolute',
+					top: 60,
+					left: 90,
+					display: 'flex',
+					alignItems: 'center',
+					gap: 28,
+					opacity: titleIn,
+					transform: `translateX(${(1 - titleIn) * -60}px)`,
+				}}
+			>
+				{step ? (
+					<div
+						style={{
+							background: ACCENT,
+							color: BG,
+							fontWeight: 800,
+							fontSize: 36,
+							padding: '8px 22px',
+							borderRadius: 999,
+						}}
+					>
+						{step}
+					</div>
+				) : null}
+				<div style={{fontSize: 60, fontWeight: 800}}>{title}</div>
+			</div>
+			<AbsoluteFill style={{top: 190, bottom: 170, height: 'auto'}}>{children}</AbsoluteFill>
+			{caption ? (
+				<div
+					style={{
+						position: 'absolute',
+						left: 90,
+						right: 90,
+						bottom: 60,
+						fontSize: 40,
+						lineHeight: 1.5,
+						color: '#cbd5e1',
+						opacity: captionIn,
+					}}
+				>
+					{caption}
+				</div>
+			) : null}
+		</AbsoluteFill>
+	);
+};
+
+// MyComp の静止画 (public/mycomp/NNN.jpeg, 30フレームごと) を表示する。
+// <Freeze><MyComp/></Freeze> で直接埋め込むと、親シーンの長さで MyComp 内の Sequence が
+// 打ち切られ後半が描画されないため、事前に書き出した画像を使う。
+export const Thumb: React.FC<{frame: number; width: number}> = ({frame, width}) => (
+	<Img
+		src={staticFile(`mycomp/${String(frame).padStart(3, '0')}.jpeg`)}
+		style={{width, height: (width * 9) / 16, borderRadius: 10, display: 'block', flexShrink: 0}}
+	/>
+);
+
+export const Box: React.FC<{
+	children: React.ReactNode;
+	color?: string;
+	style?: React.CSSProperties;
+}> = ({children, color = '#334155', style}) => (
+	<div
+		style={{
+			border: `4px solid ${color}`,
+			borderRadius: 20,
+			padding: '24px 32px',
+			background: 'rgba(255,255,255,0.04)',
+			...style,
+		}}
+	>
+		{children}
+	</div>
+);
+
+export const Arrow: React.FC<{opacity?: number}> = ({opacity = 1}) => (
+	<div style={{fontSize: 70, color: '#64748b', opacity}}>→</div>
+);
+
+// シリーズの現在地: 7本の一覧で、見ている動画を光らせる
+export const JourneyMap: React.FC<{current: SeriesId; delay?: number}> = ({current, delay = 0}) => {
+	const index = SERIES.findIndex((s) => s.id === current);
+	return (
+		<div style={{display: 'flex', flexDirection: 'column', gap: 14}}>
+			{SERIES.map((s, i) => {
+				const p = usePop(delay + i * 5);
+				const on = i === index;
+				return (
+					<div
+						key={s.id}
+						style={{
+							display: 'flex',
+							alignItems: 'center',
+							gap: 22,
+							padding: '12px 26px',
+							borderRadius: 14,
+							fontSize: 36,
+							background: on ? 'rgba(251,191,36,0.14)' : 'transparent',
+							border: `3px solid ${on ? ACCENT : 'transparent'}`,
+							color: on ? '#fff' : i < index ? '#64748b' : '#94a3b8',
+							fontWeight: on ? 800 : 400,
+							opacity: p,
+							transform: `translateX(${(1 - p) * 40}px)`,
+						}}
+					>
+						<span style={{fontFamily: MONO, color: on ? ACCENT : 'inherit', width: 40}}>{i + 1}</span>
+						{s.title}
+					</div>
+				);
+			})}
+		</div>
+	);
+};
+
+// シリーズの動画の冒頭: 大きなタイトルと現在地
+export const SeriesTitle: React.FC<{current: SeriesId; subtitle: string}> = ({current, subtitle}) => {
+	const index = SERIES.findIndex((s) => s.id === current);
+	const p = usePop(0);
+	const sub = useFadeIn(20);
+	return (
+		<AbsoluteFill
+			style={{
+				background: `linear-gradient(135deg, ${BG}, #1e3a8a)`,
+				color: '#fff',
+				fontFamily: FONT,
+				flexDirection: 'row',
+				alignItems: 'center',
+				justifyContent: 'space-around',
+				padding: '0 100px',
+			}}
+		>
+			<div style={{opacity: p, transform: `translateY(${(1 - p) * 30}px)`}}>
+				<div style={{fontFamily: MONO, fontSize: 40, color: ACCENT}}>
+					{index + 1} / {SERIES.length}
+				</div>
+				<div style={{fontSize: 110, fontWeight: 800, margin: '10px 0 24px'}}>{SERIES[index].title}</div>
+				<div style={{fontSize: 44, color: '#cbd5e1', opacity: sub}}>{subtitle}</div>
+			</div>
+			<JourneyMap current={current} delay={15} />
+		</AbsoluteFill>
+	);
+};
+
+// シリーズの動画の最後: 次の動画と、次に読むコード
+export const NextUp: React.FC<{
+	current: SeriesId;
+	files: {path: string; note: string}[];
+}> = ({current, files}) => {
+	const index = SERIES.findIndex((s) => s.id === current);
+	const next = SERIES[index + 1];
+	const card = usePop(15);
+	return (
+		<Scene title="次のステップ">
+			<div style={{display: 'flex', justifyContent: 'center', alignItems: 'flex-start', gap: 80, marginTop: 30}}>
+				<div style={{width: 760}}>
+					<div style={{fontSize: 36, color: '#94a3b8', marginBottom: 20}}>次に読むコード</div>
+					{files.map((f, i) => {
+						const o = useFadeIn(40 + i * 20);
+						return (
+							<div key={f.path} style={{opacity: o, marginBottom: 26}}>
+								<div style={{fontFamily: MONO, fontSize: 40, color: '#e2e8f0'}}>{f.path}</div>
+								<div style={{fontSize: 32, color: '#94a3b8', marginTop: 4}}>{f.note}</div>
+							</div>
+						);
+					})}
+				</div>
+				{next ? (
+					<Box
+						color={ACCENT}
+						style={{width: 600, opacity: card, transform: `translateY(${(1 - card) * 40}px)`}}
+					>
+						<div style={{fontSize: 34, color: '#94a3b8'}}>次の動画</div>
+						<div style={{fontFamily: MONO, fontSize: 40, color: ACCENT, marginTop: 16}}>
+							{index + 2} / {SERIES.length}
+						</div>
+						<div style={{fontSize: 60, fontWeight: 800, marginTop: 8}}>{next.title}</div>
+					</Box>
+				) : null}
+			</div>
+		</Scene>
+	);
+};
+
+// ナレーション付き動画の組み立て。
+// 各シーンの長さ = max(基本の長さ, ナレーションが収まる長さ)。
+// ナレーションは scripts/narrate.py で生成 (public/narration/<動画>/, src/narration/<動画>.json)
+const NARRATION_START = 10;
+const NARRATION_TAIL = 30;
+const TRANSITION = 15;
+
+export const narratedVideo = (
+	scenes: [React.FC, number][],
+	narration: {file: string; frames: number}[],
+) => {
+	if (scenes.length !== narration.length) {
+		throw new Error(
+			`シーン数 (${scenes.length}) とナレーション数 (${narration.length}) が一致しません。scripts/narrate.py で作り直してください`,
+		);
+	}
+	const items = scenes.map(([Comp, base], i) => ({
+		Comp,
+		audio: narration[i].file,
+		duration: Math.max(base, NARRATION_START + narration[i].frames + NARRATION_TAIL),
+	}));
+	const durationInFrames =
+		items.reduce((sum, s) => sum + s.duration, 0) - (items.length - 1) * TRANSITION;
+
+	const Video: React.FC = () => (
+		<TransitionSeries>
+			{items.flatMap(({Comp, audio, duration}, i) => [
+				...(i > 0
+					? [
+							<TransitionSeries.Transition
+								key={`t${i}`}
+								timing={linearTiming({durationInFrames: TRANSITION})}
+								presentation={fade()}
+							/>,
+						]
+					: []),
+				<TransitionSeries.Sequence key={`s${i}`} durationInFrames={duration}>
+					<Comp />
+					<Sequence from={NARRATION_START}>
+						<Audio src={staticFile(audio)} />
+					</Sequence>
+				</TransitionSeries.Sequence>,
+			])}
+		</TransitionSeries>
+	);
+	return {Video, durationInFrames};
+};

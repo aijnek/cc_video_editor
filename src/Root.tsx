@@ -1,6 +1,7 @@
 import {Composition} from 'remotion';
 import {MyComp} from './MyComp';
 import {HOW_IT_WORKS_DURATION, HowItWorks} from './HowItWorks';
+import {Overview, OVERVIEW_DURATION} from './journey/Overview';
 
 export const Root: React.FC = () => {
 	return (
@@ -18,6 +19,15 @@ export const Root: React.FC = () => {
 				id="HowItWorks"
 				component={HowItWorks}
 				durationInFrames={HOW_IT_WORKS_DURATION}
+				width={1920}
+				height={1080}
+				fps={30}
+				defaultProps={{}}
+			/>
+			<Composition
+				id="Overview"
+				component={Overview}
+				durationInFrames={OVERVIEW_DURATION}
 				width={1920}
 				height={1080}
 				fps={30}
